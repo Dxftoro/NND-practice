@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace MO_31_1_Lesnikov_nnd13092.Neuronet
 {
-    class HiddenLayer
+    class HiddenLayer : Layer
     {
+        public HiddenLayer(int size, int prevSize, string layerName)
+            : base(size, prevSize, NeuronType.HIDDEN, layerName)
+        {
+
+        }
     }
 }

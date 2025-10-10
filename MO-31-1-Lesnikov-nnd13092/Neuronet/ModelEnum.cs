@@ -9,6 +9,7 @@
 
     enum NeuronType
     {
+        INPUT,
         HIDDEN,
         OUTPUT
     }

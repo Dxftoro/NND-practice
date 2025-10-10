@@ -69,7 +69,7 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
         public double[,] InitializeWeights(MemoryMode memoryMode, string path)
         {
             char[] delim = new char[] { ';', ' ' };
-            string buffer;
+            //string buffer;
             string[] tempStrWeights;
             double[,] weights = new double[size, prevSize + 1];
 
