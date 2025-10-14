@@ -8,21 +8,20 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
-
-//namespace MO_31_1_Lesnikov_nnd13092
+using MO_31_1_Lesnikov_nnd13092.Neuronet;
 
 namespace MO_31_1_Lesnikov_nnd13092
 {
     public partial class Form1 : Form
     {
         private double[] inputPixels;
-        //private NumericUpDown actualNumberChoice;
-        //private Network network;
+        private Network network;
 
         public Form1()
         {
             InitializeComponent();
             inputPixels = new double[15];
+            network = new Network();
         }
 
         private void Form1_Load(object sender, EventArgs e)
