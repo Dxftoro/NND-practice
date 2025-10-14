@@ -1,446 +1,0 @@
-#pragma once
-#include <GLFW/glfw3.h>
-#include <gl/GL.h>
-
-#include <iostream>
-#include <string>
-#include <vector>
-#include <sstream>
-
-#include "func_dots.h"
-#include "stb_easy_font.h"
-
-using std::cout;
-using std::endl;
-
-#define MAIN_SCALE_DEFAULT	1.5f
-#define MAIN_SCALE_MAX		10.0f
-#define SCALE_DEFAULT		1.0f
-#define SCALE_STEP			0.1f
-
-//static bool init = false;
-static double scrollYOffset = 0.0;
-
-std::string toStringp(const float val, const int num = 2) {
-	std::ostringstream oss;
-	oss.precision(num);
-	oss << std::fixed << val;
-	return std::move(oss).str();
-}
-
-void WindowResizeCallback(GLFWwindow* window, int width, int height) {
-	glViewport(0, 0, width, height);
-}
-
-void mouseScrollCallback(GLFWwindow* window, double xOffset, double yOffset) {
-	scrollYOffset = yOffset;
-}
-
-class Rect {
-private:
-	float verticies[8];
-
-public:
-	Rect(const float& xPos, const float& yPos,
-		const float& width, const float& height);
-
-	inline void replaceByX(const float& xPos, const float& width);
-	inline void replaceByY(const float& yPos, const float& height);
-
-	inline void draw(const int& width, const int& height, bool newLayer,
-		const float& r, const float& g, const float& b, const float& a = 0.0f) const;
-};
-
-Rect::Rect(const float& xPos, const float& yPos,
-	const float& width, const float& height) {
-	// -_-
-	verticies[0] = xPos;			verticies[1] = yPos;
-	verticies[2] = xPos + width;	verticies[3] = yPos;
-	verticies[4] = xPos + width;	verticies[5] = yPos + height;
-	verticies[6] = xPos;			verticies[7] = yPos + height;
-}
-
-inline void Rect::replaceByX(const float& xPos, const float& width) {
-	verticies[0] = xPos;
-	verticies[2] = xPos + width;
-	verticies[4] = xPos + width;
-	verticies[6] = xPos;
-}
-
-inline void Rect::replaceByY(const float& yPos, const float& height) {
-	verticies[1] = yPos;
-	verticies[3] = yPos;
-	verticies[5] = yPos + height;
-	verticies[7] = yPos + height;
-}
-
-inline void Rect::draw(const int& width, const int& height, bool newLayer,
-	const float& r, const float& g, const float& b, const float& a) const {
-
-	glPushMatrix();
-		if (newLayer) {
-			glLoadIdentity();
-			glOrtho(0, width, height, 0, -1, 1);
-		}
-
-		glColor4f(r, g, b, a);
-		glVertexPointer(2, GL_FLOAT, 0, verticies);
-
-		glEnableClientState(GL_VERTEX_ARRAY);
-			glDrawArrays(GL_QUADS, 0, 4);
-		glDisableClientState(GL_VERTEX_ARRAY);
-
-	glPopMatrix();
-}
-
-struct ChartInfo {
-	float r, g, b;
-	float lineWidth;
-	int vertArraySize;
-	float* verticies;
-	std::string name;
-	bool projections = false;
-
-	void setColor(float r, float g, float b);
-};
-
-void ChartInfo::setColor(float r, float g, float b) {
-	this->r = r;
-	this->g = g;
-	this->b = b;
-}
-
-class Chart {
-private:
-	GLFWwindow* window;
-	const int width, height;
-	std::string title;
-	std::vector<ChartInfo> tables;
-
-	const float mainScale;
-	float scale, pointSize, coordStep;
-	mutable float translateX, translateY;
-
-	inline void controlScale();
-	inline void scaleChart() const;
-	inline void drawAxes(const float& xFloor, const float& xCeil,
-		const float& yFloor, const float& yCeil, const float& kStep,
-		const std::vector<std::string>& markersY) const;
-
-	void drawTables() const;
-	inline void drawProjections(const ChartInfo& info) const;
-	void drawText(float x, float y, std::string text, float scale,
-		float r, float g, float b, bool newLayer) const;
-	inline void drawLegend() const;
-
-public:
-	Chart(int width, int height, const std::string& title,
-		float _mainScale = MAIN_SCALE_DEFAULT);
-	~Chart();
-
-	vec2 toRaw(const vec2& vec) const;
-	float toRaw(float x, float screenParam) const;
-	vec2 toVal(const vec2& vec) const;
-	float toVal(float x, float screenParam) const;
-
-	size_t add(const NodeTable& table,
-		float r, float g, float b, float lineWidth, const std::string& name);
-	void run();
-
-	void setCoordStep(float coordStep) { this->coordStep = coordStep; }
-	void setPointSize(float pointSize) { this->pointSize = pointSize; }
-
-	ChartInfo& operator[](size_t index) { return tables[index]; }
-};
-
-Chart::Chart(int _width, int _height, const std::string& _title, float _mainScale)
-	:	width(_width), height(_height),
-		title(_title), mainScale(_mainScale) {
-
-	window = nullptr;
-	scale = SCALE_DEFAULT;
-	pointSize = 5.0f;
-	coordStep = 1.0f;
-	translateX = 0.0f;
-	translateY = 0.0f;
-}
-
-Chart::~Chart() {
-	for (int i = 0; i < tables.size(); i++) {
-		delete[] tables[i].verticies;
-	}
-}
-
-vec2 Chart::toRaw(const vec2& vec) const {
-	return vec2(
-		(width * (vec.x / mainScale + 1) / 2),
-		(height * (-vec.y / mainScale + 1) / 2)
-	);
-}
-
-float Chart::toRaw(float x, float screenParam) const {
-	return screenParam * (x / mainScale + 1) / 2;
-}
-
-vec2 Chart::toVal(const vec2& vec) const {
-	return vec2(
-		mainScale * ((2 * vec.x) / width - 1),
-		mainScale * ((2 * vec.y) / height - 1)
-	);
-}
-
-float Chart::toVal(float x, float screenParam) const {
-	return mainScale * ((2 * x) / screenParam - 1);
-}
-
-size_t Chart::add(const NodeTable& table,
-	float r, float g, float b, float lineWidth, const std::string& name) {
-
-	int vertArraySize = table.size() * 2;
-	float* verticies = new float[vertArraySize];
-
-	for (int i = 0, vertI = 0; i < table.size(); i++, vertI += 2) {
-		vec2 rawVec = toRaw(table.get(i));
-		verticies[vertI] = (float)rawVec.x;
-		verticies[vertI + 1] = (float)rawVec.y;
-
-		//cout << table.get(i).x << " " << table.get(i).y << " : " <<
-		//	rawVec.x << " " << rawVec.y<< endl;
-	}
-
-	ChartInfo info;
-	info.setColor(r, g, b);
-	info.lineWidth = lineWidth;
-	info.vertArraySize = vertArraySize;
-	info.verticies = verticies;
-	info.name = name.c_str();
-
-	tables.push_back(info);
-	return tables.size() - 1;
-}
-
-inline void Chart::controlScale() {
-	if (scrollYOffset) {
-		scale += scrollYOffset * SCALE_STEP;
-		scrollYOffset = 0.0f;
-		if (scale < SCALE_DEFAULT) scale = SCALE_DEFAULT;
-	}
-
-	if (glfwGetKey(window, GLFW_KEY_R)) {
-		scale = SCALE_DEFAULT;
-		translateX = 0.0f;
-		translateY = 0.0f;
-	}
-}
-
-inline void Chart::scaleChart() const {
-	double mouseX, mouseY;
-	glfwGetCursorPos(window, &mouseX, &mouseY);
-
-	float scaledWidth = width / scale;
-	float scaledHeight = height / scale;
-
-	glScalef(scale, scale, 1.0f);
-	glTranslatef(
-		-(width - scaledWidth) / 2,
-		-(height - scaledHeight) / 2,
-	0.0f);
-
-	//float translateXPrev = translateX;
-	//float translateYPrev = translateY;
-
-	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-		//glTranslatef(-(mouseX / scale - scaledWidth / 2), 
-		//			-(mouseY / scale - scaledHeight / 2), 0.0f);
-
-		translateX = -(mouseX / scale - scaledWidth / 2);
-		translateY = -(mouseY / scale - scaledHeight / 2);
-	}
-
-	glTranslatef(translateX, translateY, 0.0f);
-}
-
-inline void Chart::drawProjections(const ChartInfo& info) const {
-	glColor3f(0.0f, 0.8f, 0.8f);
-	glLineWidth(1.0f);
-
-	for (size_t i = 0; i < info.vertArraySize; i += 2) {
-		glBegin(GL_LINES);
-			glVertex2f(info.verticies[i], info.verticies[i + 1]);
-			glVertex2f(info.verticies[i], height / 2.0f);
-		glEnd();
-
-		glBegin(GL_LINES);
-			glVertex2f(info.verticies[i], info.verticies[i + 1]);
-			glVertex2f(width / 2, info.verticies[i + 1]);
-		glEnd();
-	}
-}
-
-void Chart::drawTables() const {
-	for (int i = 0; i < tables.size(); i++) {
-		glVertexPointer(2, GL_FLOAT, 0, tables[i].verticies);
-		glColor3f(tables[i].r, tables[i].g, tables[i].b);
-		glLineWidth(tables[i].lineWidth);
-		glPointSize(pointSize);
-
-		glEnableClientState(GL_VERTEX_ARRAY);
-			glDrawArrays(GL_LINE_STRIP, 0, tables[i].vertArraySize / 2);
-			if (pointSize)
-				glDrawArrays(GL_POINTS, 0, tables[i].vertArraySize / 2);
-			if (tables[i].projections) drawProjections(tables[i]);	
-		glDisableClientState(GL_VERTEX_ARRAY);
-	}
-}
-
-inline void Chart::drawLegend() const {
-	if (!glfwGetKey(window, GLFW_KEY_SPACE)) return;
-
-	float xOffset = 20.0f, yOffset = 0.0f;
-	static Rect rect(xOffset, yOffset, 18.0f, 18.0f);
-
-	for (int i = 0; i < tables.size(); i++) {
-		yOffset += 25.0f;
-		rect.replaceByY(yOffset, 18.0f);
-
-		if (glfwGetKey(window, GLFW_KEY_SPACE)) {
-			rect.draw(width, height, true,
-				tables[i].r, tables[i].g, tables[i].b);
-			drawText(xOffset + 25.0f, yOffset + 3.0f, tables[i].name, 1.7f,
-				0.0f, 0.0f, 0.0f, true);
-		}
-	}
-}
-
-void Chart::drawText(float x, float y, std::string text, float scale,
-	float r, float g, float b, bool newLayer = true) const {
-
-	// êîëè÷åñòâî âåğøèí, êîòîğûìè ìîæíî îòîáğàçèòü îêîëî 500 ñèìâîëîâ:
-	static char buffer[99999];
-	int numQuads;
-
-	numQuads = stb_easy_font_print(0, 0, &text[0], NULL, buffer, sizeof(buffer));
-
-	glPushMatrix();
-		if (newLayer) {
-			glLoadIdentity();
-			glOrtho(0, width, height, 0, -1, 1);
-		}
-		
-		glColor3f(r, g, b);
-		glTranslatef(x, y, 0.0f);
-		glScalef(scale, scale, 1.0f);
-
-		if (!newLayer) glScalef(1.0f / this->scale, 1.0f / this->scale, 1.0f);
-
-		glEnableClientState(GL_VERTEX_ARRAY);
-			glVertexPointer(2, GL_FLOAT, 16, buffer);
-			glDrawArrays(GL_QUADS, 0, numQuads * 4);
-		glDisableClientState(GL_VERTEX_ARRAY);
-	glPopMatrix();
-}
-
-inline void Chart::drawAxes(const float& xFloor, const float& xCeil,
-	const float& yFloor, const float& yCeil, const float& kStep,
-	const std::vector<std::string>& markers) const {
-
-	glBegin(GL_LINES);
-		glVertex2f(xFloor, height / 2.0f);
-		glVertex2f(xCeil, height / 2.0f);
-	glEnd();
-
-	glBegin(GL_LINES);
-		glVertex2f(width / 2.0f, yFloor);
-		glVertex2f(width / 2.0f, yCeil);
-	glEnd();
-
-	float k = -ceil(mainScale);
-
-	for (int i = 0; i < markers.size(); k += kStep, i++) {
-		drawText(toRaw(k, width), height / 2, markers[i], 1.4f, 0.0f, 0.0f, 0.0f, false);
-		drawText(width / 2, toRaw(k, height), 
-			markers[markers.size() - 1 - i],
-			1.4f, 0.0f, 0.0f, 0.0f, false);
-	}
-}
-
-void Chart::run() {
-	window = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
-
-	if (!window) {
-		throw std::runtime_error("Can't create window!");
-	}
-
-	glfwMakeContextCurrent(window);
-	glfwSetWindowSizeCallback(window, WindowResizeCallback);
-	glfwSetScrollCallback(window, mouseScrollCallback);
-
-	float mul = mainScale >= 2.0f ? mainScale : 3.0f;
-	float xFloor = -ceil(width * mul);
-	float xCeil = ceil(width * mul);
-	float yFloor = -ceil(height * mul);
-	float yCeil = ceil(height * mul);
-
-	cout << "Main scale: " << mainScale << endl;
-
-	std::vector<std::string> markers;
-
-	//const float kStep = 0.5f;
-	int precision = 1;
-
-	for (float k = -ceil(mainScale); k <= ceil(mainScale); k += coordStep) {
-		float newK = round(k * 10) / 10;
-		if (newK == 0.0f) precision = 0;
-		else precision = 1;
-		markers.push_back(toStringp(newK, precision));
-	}
-
-	while (!glfwWindowShouldClose(window)) {
-		controlScale();
-		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		glPushMatrix();
-
-		glLoadIdentity();
-		glOrtho(0, width, height, 0, -1, 1);
-
-		scaleChart();
-
-		glColor3f(0.0f, 0.0f, 0.0f);
-		glLineWidth(1.3f);
-		
-		drawAxes(xFloor, xCeil, yFloor, yCeil, coordStep, markers);
-
-		drawTables();
-		drawLegend();
-
-		glPopMatrix();
-
-		glfwSwapBuffers(window);
-		glfwPollEvents();
-	}
-
-	glfwDestroyWindow(window);
-}                        ="ß1=ÄÏ*%‚)„š3†Q­œJ·ŒDÃB BÎB3(‰É TD×M”Mê~TxÅ‚˜¢ˆƒF¢›¢İeJ¦C»L|`ÌÛ€)ĞŞ0³‰.kÊWtF–hİ@@f2Hê®X@1ˆÅ@•`$újNbõ-¢³–Rä?DAk½©»`À‘`'u-ÆDT]Q Ü¯´yÄ`%áeQ¶±Ññ»OHâj.ë¹o“LQèi•3©¦Jr_‘OIc¯+W+–šÃ´İT-¸>ÌMØ‰>ÎÔêK_)Él0êIãKjuú€§º‡(D¯Ùdµ±2WQ¤¾J¨ã-êñŸ§CÅz_E‚w·G]­ÿ:ôÂWé»Co,†Ô›PüôµùiıÊ³Û—lÚ•F·©©6åQ®İŒá–R«û©Ú·¼@H É*JÀ·ÏáBX,»#oJŞŒ_–¨qdäŠÛƒÔî•P¼pŠÍ=ZÖ§“j¥–½T¢—)İ‹ò’a‹Ô}Tı
-‡Ö‚âs–»k(^ÜaÜ’v)éJ*İ†T¡¦0<“ÜêzÖ;¾Ò’ë:åö¿İS½ÔPı¼Y«pÏ¦“ñ| Ñw""Mè
-(îÙ4:L:Q"+4otİ9LŸ2ö*H¶_şfú´& ¦¢™—š€   ÿûà@ 'ÜuÑÃš{pû
-5wOn9ÃI-¼}CÜ8(á½=¸  1×Tó£C‘TÌ6N‚ÛUÃä‚ñ ëìÇ™3¢
-øÍSqËˆ7B%p<Âh%E¥fĞ4é[Ÿv*>Š¡'QĞ__nü`…Q0 P–pQf)öÜ†L(„Ë@­åú£<.À)Ë¦¨ìP×Mlf™ÊÂÖr†.Xé‡Ü«§*‚Å^Ì’aa2ZÁ2ÄmdªËöæ!br…Ò¾yß¼8"Ìú*O2@‚ğ¼m‚"´£VáÜ¯M(¶¬+½Ë÷%·Ë{rü·4vÓö}Õ½ÊŞF‰kb:ê¯m5 ïu…Œb°]cÿş>|cZÿçSÊY± ˆâÓbA# `=ÀUÖeÒòPäˆ1Š9Ï3)ºÇÁƒÈZã»‘>¢‰I%foÌÁ„ÛWŠf#à,¨µyY¨ê*ÄåBŒ¶.×@¨ª³vZªÄ§byi¤êšº¡ÓPH“?bCUÌ-cœç*ìé:IŠ6%Rh`9åWÀĞ=[UHr•¸¬¯=k‰¸‹•DÏ_°'Ká"|·+¦8ïá¼B"ÑŠ*g0 Ad+;…IÛ-ãÊ¸:«=ZªöÑı#êò\Ç{êœÜAÉg$I¿mÅO¡ËVËÉ‡ä/†tä6qxàöÛ³1ë¨Ö®öÃ¨¦.õq9À À ÉÛŒ†#š¶CM¨!/†Ò©J[u¤*'8ñ'“Ò`¤¤@°ôY¹K[”ÛDƒ6’øÄY“l0§É|ˆd‚upS
-Å’|23D€(c“ÓDìí^R+«µ—Ü)SS.™^¦œğñÍÌ)„%“R3ÒfXÛ]ºm-c^9½3èiÕÓ<P›Ã­)hS¬Á7l¥nbtÚ“jxªËñÿV'¬ÄÎØÖ[’¶òC¹uHîp yK‹œiQdÀUåâ \R9xóÜhgX…±<q>5ÍØ”¬ŠşTzA"ÆØÌaÁÌ7[$@ 	îEŸP)D<Zƒ"eƒ¤Lµå%Kmg•#¾:PÌ«‘'a0çüÀËB’É¤nÃU#K–Ü Åšdô†%%fZoãp2&œFÁ!ñFJş#œ8p‹ËTuv@ˆÔ’âÈ’fXŸR?z‹5V&gzâ”²9+{Y~D€Üõ[Gu:ÚÙ¢6–±›k9>¬hŠÓÙ/XP”æ²Æ V:Ç)Û7ÚÚ•w%­ëÄX‡½¥ÖLäìâwökÖlæù³Á%±ã7ŸåĞkA`‡Ëã^òÒœGÇ…cøCá<eo.fÑ›`n%_IøScüãÿÚ¦¥Ûã“SQLËM@ÿûà@ §ÙuQËº{põª!wOnßB.iµÃÖ7èYÍ=¸  5Lff€)|‘4Æ°Ù‡½´< Æ‚´T@¤¬pÀ:ôÔcŸ‹†ê"aj(ä=l*–Û¤L¦‘²6e°g¶YåGPBˆyd6@¦—ÔıKŸ•hk"­vã\Š¶‹¦uKÊÒù’2ğÌÛfM{]i”øTÁkT«×tÄ0E[IÖ„%á[áÇcLÂğÓMâhFzO,ÛTÀAï{j­)2—âõ3WW®öâı·Æ&K:Ä‘›-\29jM¾Ñ¥v¹'Æ4_C˜é|úÌÅºxº¡ŞK§ƒ®[Üuí<'Ûúq­>$ÿïÿöh¿ëÿáä· &R_†4‰p°@€Æ±©WÀÎ¢ö0 AÖb®]!Îéæã-ê30L˜û¨Ê›€„h9l‘ÑTQ²Aü‡›”Œ°³±šuf2È]˜‹®HIòŸÊÇ‹XÍ5XhêôÕ–ºª’7åõ(Ö7]¾†ùt#op”›âË–Qg<jüÅhí#´17›{îÕÌF%Ü9¦rr­cC%³3]RÈ›ÍóeRñ“·½&WŸn$cµûİl»8Í»nKGİWnYÕ¬F§‚ÎÚ9
-j1N˜EÏ<%Q±;Ù¬§O¼ĞKœĞ Y…™ŠŞ=e§ğ>ÿ¥şx¿ÿ¯ÿ‡†· óäSzL4CYZ¶qa`©Aİr o¸À4Éhe+8Ü$‡V-)(eJí­‰«†i³¬ß¼ÖH] ºÎÚsH*»)r	1è0
-\@`E@ÇÌ¥`“6ˆ¤¬ëO•¬„/¡ÑÌ·iİ½Ä†ÃÅzã±ÚX¥;Kƒ¬À4ö†ƒ[˜Ç4>Ÿë‹!¡{>oæÙ›TÖß]LVÆeÆ§ÊÎPd»š ‘ëu;&Şxqñ~5H§ÌëqŒP¦™©uÖòùšÓ1ØST0xQ¼Ğ¬8èÖ4¥tŒìÀÆÂÿ3,Î®“]Î_$lõ§Ö‚¹›©‘}ğ‰Ê b0°”„ k°Fø¬”Ì(G§ó}…ŸbIñ:…ì )i*ŸTmZã‡Ò¾òå[ğĞ cÍY2‚¢,±ÖÒÎæG²iB	¤ÖÙ'6ä ôúÒ(yâšXƒºØ²àRCp†UWMé¬Ä]*À¯>nº©år±„ZÜß6›§Ãs§ì3©rÎØ¬€ú]‹]ğöB¡kV´‘qxDEÌ¢âˆ4úÅL˜Şkø¼U+ŸÖMÀ"Å´ÀnTCy8Oë©ÉÄÛûSÃ$Œí×Ò’=5g»Æ5ãkÿ%¿ÇƒAêƒ¶”ÄÔS2ã“P             ÿûà@ §ØwĞÃ»{põíúwOn_½Ja‘Ãï8)Ì½ğ  !4*%1ì@¡`UŒ¹ZËLf|„…$^	 ^C,!W
-¨P4ÎÜ8²2¥ğ °ˆÑÔ6ÏÙAŒ‘İ—)‘	q0¥tõ¬£âOÁ‚_ƒ6ºõ4&à”«Bm,H`
-a(†İŠGAkXV¾™	VmÛiÌ˜ê5jÒ¤‚â¤8{"éX4Ëšâe8½dKï%fbO2ÑæÄzŸqGæ`fs1£Køßˆ–×‹vÒ’˜ŸæĞ7Ë¢6—Ä5­É»¨³|AIŞwÀ®±f
-`íÔŞu&éªŒìê#u˜Û}z¾·\~ÃşöÕÿuÿõÿâ¿ïÁ hu^cH:  SÅ®1í¦2c-T*5‹Ñ¦¨4ø‰MWzÁ!&M}äoàĞhÎrÖ¸H°›×Ã^$]g £(†ı¹Ã À\!ş¡—¼Ï´½ÓŒCIyÈÈmÛ©y`ÙÛX\ÇúôÌªAé>Ø"=áÆÉocX:UCb-Óà§¤|İ[Æ¡âÓ—kÓÂjgÇó!sze¼F`WpŒ—W–1@jÓzËééôvRòF‰ØìÖôï¶‚Ö&±sqbĞî¬Í{zØš¾ñ‰³şç]ş÷_>Gü¨èoğÍ²`ê `ŒÃ!Ó–ÌÖG3èH°:1h=Æ ƒfƒE£00 ¦
-	€@" !PH€Z ˆ ‚,8\cO0*ÔÇfë0-¤;Œ#+p½k*6“HˆË™B¥_35Úw5ˆJ·±Øƒeí‚kŒ±ƒÉZÓÿpòÁÁÂà	7%û0åÏÊ¥ğ˜­y{¤ÒÉhJ¤ÈOEkÍô¸¦xP•4$˜ #% :Õ[UI·Qü&f6¿Œ•íã}eí4e~mù—Ã‡‰¢B'–´ÕƒL™¨ğ¦sl;ßw»g+É™ü™È/3Ğ‘1LB„‘ŞemÑ“B&˜Jer)£BP@ÉbÓ	Œ4@XÆ½Ä@ô¸ODÌrKÖDiuD‡@X·``ú)«a€ 8F—At'N8m{8	4AıqÙbâb
-6ºI5‘ $5‚}<EUÙšn²BşÒb†XKzÚ”»dQ5WçÂ‰ã
-™rÖ·HÊu§ÙSĞYÜ³ˆŞmë†VÆ69&”1ÍÆu|LãáÊÌ-™‹z5±¸cîI[Yø‰˜qõìîjãeÑ4¯`™Œ¸Æ‘£zÈ©‰½ó²|6çÿ9¦ ÿoşØÿãzşZO{ì_Bb
-j(   ÿûà@ çÈoÒš{púN
-0sOn©D.éíÃì¸(EÍ=ğ M7?3à¬ÃÅCA¢Dg#–GA„ ã, ÌD)‚‰¡rëc Âh©‚D €	œTeJ'RG P"¸àf¸<H³¦,(È@ˆHšÅËNQ·PtVDZlO¸cÂR1JĞ…Œ†İÙÌlÁo§Y‹·Y{½Ì_Ë	yV–†9V½¡Ì[ˆê¦Odu*QŠ"”x°Áb](vïS”k{¾i\#'­L·"î&\m§ÓÊç%¼{ëÄºí÷ÍŞ–ËGšRÎğõ¬Wâ˜i¼dö\Ú?jaMoWz|µFµ±sOV¶`*§ÕjÅÛ½wœÿ­ï¯ÿVh8}|ØDS)«š—2™€Ê&³‘PËÃ@!$h@LX”Ô¬HR† GiAtb0†Œ[dš]á€A ƒ¬'($KJD Pø”JCš+£ ñxdh6FD ]sf/;²2ÉJ¤ß¹æ83kÌ¶.í¯i¢L"¥j…NÊ†¡!òp©c¯>³t¦ÈjËƒSz’É…S8úSmjrUå‚äs²OT¢yìëE{cœ™NZ/Ü7ôµûM¾¥\´j[©V<x°EÕW}gS=½£8jÖ”²DÒ¶¢í˜Ji±öÜ¯›z²İ·¿"?zÎ¡O¼bÿ?úoÿïÿË&åµdjTğgH$@L˜H:4˜(¦)‰¡!†Aù@0˜N˜r-éc 2¥õÓP2ÿ* Æ0²µ3ó S¤r¤¨Pè”†Ç‹âˆ 0)²D¡bÇšV4T4=bš«¸¡‹­1¸z'&Iª¨J…ŠgIBKÑ›šÖ‰ÌËNÜöVhG°éaX•öÕ-d°ÍŞÃ'JÎú2V7€»2±œóæ»æ·u§Š³=sƒÖ&|HBëŞÍ)úƒƒÕfû’jÀÂ˜»^œâY®h»¶L«îÑT®¦ C&Øµ{n+]5ÆÿùFÉT½Û˜}îÏDF#x˜T´˜è c0hpÎ¡à@¨cÈŠä ’@€”Ô9,·ÉGˆ”ÃB$(H$`Ì3ƒ XÊG ÃHw«iºß'°X*šƒ¢$³Ö´RÅ1‘â4Â<‚Á<X‹fCBR^»h÷D4ñä=U-‚åêš$6óõÃhD¢z££Õìté«Mk§Eå“'$¢½\ë8³†$¶RÃ³íÂ*‘šĞMjË¨'+ïª
-ŞÄ¥”Ú›‡_EœK¨h­fÔ=ã^ô.Q?Öê[åO»_Ü›ÿˆf÷¶uÿõ¿¿ñ¼œû|ùÊó)ˆ)¨  ÿûà@ ÇŞoĞ“º{púN
-sOnm¿D5İ ì7èB»   D#‰ÆƒE
-ƒÌó4ãBÓ(ó P`~a@–˜@3…¦šhb‘JPf@+Ã;dÅ L,Pp"(ˆ‡i®Bg5„Kƒ–CLÎiõ›7MÙZã­"ò(,2(àÙ(c°¦d²Ùt7-K:ŒJög%ÛÍu¼$[âí½r…LÎáØùbÔå©Z7‚—U´p©Ô±¼¬µ×¨ŒêÛçZk«µf/š+·ï£Ş
-æâİ\{.s[aş÷Nÿ?8Ã}hú))BâDˆ|‚QªÑ[„F4ÕŠAãá¼@Z›l›Wô’Øşºÿø¿ü6``0³8ñx+5qÂcóG&ÇIAÅã"ÉÆ ,˜L*‡DÂp£`l°3à¸àS2Ö™Ü£KXôBPpp)Â	UëÈî‰
-Œ(râ¥IQ+…~™UF‚“SF`/È”‚µMĞoLAx‚cs
-ÇqR²WÈ¹*HY
