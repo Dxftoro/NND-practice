@@ -58,9 +58,24 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
             }
         }
 
+        private void SwapRows(double[,] data, int indexA, int indexB)
+        {
+            for (int i = 0; i < data.GetLength(0); i++)
+            {
+                double temp = data[indexA, i];
+                data[indexA, i] = data[indexB, i];
+                data[indexB, i] = temp;
+            }
+        }
+
         public void ShuffleArrayRows(double[,] data)
         {
-
+            Random random = new Random();
+            for (int i = data.Length - 1; i >= 0; i--)
+            {
+                int choosenIndex = random.Next(i + 1);
+                SwapRows(data, i, choosenIndex);
+            }
         }
     }
 }
