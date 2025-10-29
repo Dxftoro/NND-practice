@@ -29,6 +29,11 @@ namespace MO_31_1_Lesnikov_nnd13092
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
@@ -47,13 +52,19 @@ namespace MO_31_1_Lesnikov_nnd13092
             this.actualNumber = new System.Windows.Forms.NumericUpDown();
             this.button16 = new System.Windows.Forms.Button();
             this.button17 = new System.Windows.Forms.Button();
+            this.labelOut = new System.Windows.Forms.Label();
+            this.labelProbability = new System.Windows.Forms.Label();
+            this.buttonRecognize = new System.Windows.Forms.Button();
+            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.button18 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.actualNumber)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
             // 
             // button1
             // 
             this.button1.BackColor = System.Drawing.Color.White;
-            this.button1.Location = new System.Drawing.Point(12, 12);
+            this.button1.Location = new System.Drawing.Point(12, 57);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(40, 40);
             this.button1.TabIndex = 0;
@@ -63,7 +74,7 @@ namespace MO_31_1_Lesnikov_nnd13092
             // button2
             // 
             this.button2.BackColor = System.Drawing.Color.White;
-            this.button2.Location = new System.Drawing.Point(58, 12);
+            this.button2.Location = new System.Drawing.Point(58, 57);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(40, 40);
             this.button2.TabIndex = 1;
@@ -73,7 +84,7 @@ namespace MO_31_1_Lesnikov_nnd13092
             // button3
             // 
             this.button3.BackColor = System.Drawing.Color.White;
-            this.button3.Location = new System.Drawing.Point(104, 12);
+            this.button3.Location = new System.Drawing.Point(104, 57);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(40, 40);
             this.button3.TabIndex = 2;
@@ -83,7 +94,7 @@ namespace MO_31_1_Lesnikov_nnd13092
             // button4
             // 
             this.button4.BackColor = System.Drawing.Color.White;
-            this.button4.Location = new System.Drawing.Point(104, 58);
+            this.button4.Location = new System.Drawing.Point(104, 103);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(40, 40);
             this.button4.TabIndex = 5;
@@ -93,7 +104,7 @@ namespace MO_31_1_Lesnikov_nnd13092
             // button5
             // 
             this.button5.BackColor = System.Drawing.Color.White;
-            this.button5.Location = new System.Drawing.Point(58, 58);
+            this.button5.Location = new System.Drawing.Point(58, 103);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(40, 40);
             this.button5.TabIndex = 4;
@@ -103,7 +114,7 @@ namespace MO_31_1_Lesnikov_nnd13092
             // button6
             // 
             this.button6.BackColor = System.Drawing.Color.White;
-            this.button6.Location = new System.Drawing.Point(12, 58);
+            this.button6.Location = new System.Drawing.Point(12, 103);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(40, 40);
             this.button6.TabIndex = 3;
@@ -113,7 +124,7 @@ namespace MO_31_1_Lesnikov_nnd13092
             // button7
             // 
             this.button7.BackColor = System.Drawing.Color.White;
-            this.button7.Location = new System.Drawing.Point(104, 104);
+            this.button7.Location = new System.Drawing.Point(104, 149);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(40, 40);
             this.button7.TabIndex = 8;
@@ -123,7 +134,7 @@ namespace MO_31_1_Lesnikov_nnd13092
             // button8
             // 
             this.button8.BackColor = System.Drawing.Color.White;
-            this.button8.Location = new System.Drawing.Point(58, 104);
+            this.button8.Location = new System.Drawing.Point(58, 149);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(40, 40);
             this.button8.TabIndex = 7;
@@ -133,7 +144,7 @@ namespace MO_31_1_Lesnikov_nnd13092
             // button9
             // 
             this.button9.BackColor = System.Drawing.Color.White;
-            this.button9.Location = new System.Drawing.Point(12, 104);
+            this.button9.Location = new System.Drawing.Point(12, 149);
             this.button9.Name = "button9";
             this.button9.Size = new System.Drawing.Size(40, 40);
             this.button9.TabIndex = 6;
@@ -143,7 +154,7 @@ namespace MO_31_1_Lesnikov_nnd13092
             // button10
             // 
             this.button10.BackColor = System.Drawing.Color.White;
-            this.button10.Location = new System.Drawing.Point(104, 150);
+            this.button10.Location = new System.Drawing.Point(104, 195);
             this.button10.Name = "button10";
             this.button10.Size = new System.Drawing.Size(40, 40);
             this.button10.TabIndex = 11;
@@ -153,7 +164,7 @@ namespace MO_31_1_Lesnikov_nnd13092
             // button11
             // 
             this.button11.BackColor = System.Drawing.Color.White;
-            this.button11.Location = new System.Drawing.Point(58, 150);
+            this.button11.Location = new System.Drawing.Point(58, 195);
             this.button11.Name = "button11";
             this.button11.Size = new System.Drawing.Size(40, 40);
             this.button11.TabIndex = 10;
@@ -163,7 +174,7 @@ namespace MO_31_1_Lesnikov_nnd13092
             // button12
             // 
             this.button12.BackColor = System.Drawing.Color.White;
-            this.button12.Location = new System.Drawing.Point(12, 150);
+            this.button12.Location = new System.Drawing.Point(12, 195);
             this.button12.Name = "button12";
             this.button12.Size = new System.Drawing.Size(40, 40);
             this.button12.TabIndex = 9;
@@ -173,7 +184,7 @@ namespace MO_31_1_Lesnikov_nnd13092
             // button13
             // 
             this.button13.BackColor = System.Drawing.Color.White;
-            this.button13.Location = new System.Drawing.Point(104, 196);
+            this.button13.Location = new System.Drawing.Point(104, 241);
             this.button13.Name = "button13";
             this.button13.Size = new System.Drawing.Size(40, 40);
             this.button13.TabIndex = 14;
@@ -183,7 +194,7 @@ namespace MO_31_1_Lesnikov_nnd13092
             // button14
             // 
             this.button14.BackColor = System.Drawing.Color.White;
-            this.button14.Location = new System.Drawing.Point(58, 196);
+            this.button14.Location = new System.Drawing.Point(58, 241);
             this.button14.Name = "button14";
             this.button14.Size = new System.Drawing.Size(40, 40);
             this.button14.TabIndex = 13;
@@ -193,7 +204,7 @@ namespace MO_31_1_Lesnikov_nnd13092
             // button15
             // 
             this.button15.BackColor = System.Drawing.Color.White;
-            this.button15.Location = new System.Drawing.Point(12, 196);
+            this.button15.Location = new System.Drawing.Point(12, 241);
             this.button15.Name = "button15";
             this.button15.Size = new System.Drawing.Size(40, 40);
             this.button15.TabIndex = 12;
@@ -202,7 +213,7 @@ namespace MO_31_1_Lesnikov_nnd13092
             // 
             // actualNumber
             // 
-            this.actualNumber.Location = new System.Drawing.Point(12, 257);
+            this.actualNumber.Location = new System.Drawing.Point(12, 302);
             this.actualNumber.Maximum = new decimal(new int[] {
             9,
             0,
@@ -214,7 +225,7 @@ namespace MO_31_1_Lesnikov_nnd13092
             // 
             // button16
             // 
-            this.button16.Location = new System.Drawing.Point(12, 283);
+            this.button16.Location = new System.Drawing.Point(12, 328);
             this.button16.Name = "button16";
             this.button16.Size = new System.Drawing.Size(64, 41);
             this.button16.TabIndex = 16;
@@ -224,7 +235,7 @@ namespace MO_31_1_Lesnikov_nnd13092
             // 
             // button17
             // 
-            this.button17.Location = new System.Drawing.Point(80, 283);
+            this.button17.Location = new System.Drawing.Point(80, 328);
             this.button17.Name = "button17";
             this.button17.Size = new System.Drawing.Size(64, 41);
             this.button17.TabIndex = 17;
@@ -232,11 +243,83 @@ namespace MO_31_1_Lesnikov_nnd13092
             this.button17.UseVisualStyleBackColor = true;
             this.button17.Click += new System.EventHandler(this.SaveTestOnClick);
             // 
+            // labelOut
+            // 
+            this.labelOut.AutoSize = true;
+            this.labelOut.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.labelOut.Location = new System.Drawing.Point(16, 12);
+            this.labelOut.Name = "labelOut";
+            this.labelOut.Size = new System.Drawing.Size(98, 33);
+            this.labelOut.TabIndex = 18;
+            this.labelOut.Text = "Out: --";
+            // 
+            // labelProbability
+            // 
+            this.labelProbability.AutoSize = true;
+            this.labelProbability.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.labelProbability.Location = new System.Drawing.Point(160, 12);
+            this.labelProbability.Name = "labelProbability";
+            this.labelProbability.Size = new System.Drawing.Size(188, 33);
+            this.labelProbability.TabIndex = 19;
+            this.labelProbability.Text = "Probability: --";
+            // 
+            // buttonRecognize
+            // 
+            this.buttonRecognize.Location = new System.Drawing.Point(167, 57);
+            this.buttonRecognize.Name = "buttonRecognize";
+            this.buttonRecognize.Size = new System.Drawing.Size(92, 40);
+            this.buttonRecognize.TabIndex = 20;
+            this.buttonRecognize.Text = "Recognize";
+            this.buttonRecognize.UseVisualStyleBackColor = true;
+            this.buttonRecognize.Click += new System.EventHandler(this.buttonRecognize_Click);
+            // 
+            // chart1
+            // 
+            chartArea2.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea2);
+            legend2.Name = "Legend1";
+            this.chart1.Legends.Add(legend2);
+            this.chart1.Location = new System.Drawing.Point(167, 103);
+            this.chart1.Name = "chart1";
+            series4.ChartArea = "ChartArea1";
+            series4.Legend = "Legend1";
+            series4.Name = "Series1";
+            series5.BorderWidth = 4;
+            series5.ChartArea = "ChartArea1";
+            series5.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series5.Legend = "Legend1";
+            series5.Name = "Series2";
+            series6.ChartArea = "ChartArea1";
+            series6.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series6.Legend = "Legend1";
+            series6.Name = "Series3";
+            this.chart1.Series.Add(series4);
+            this.chart1.Series.Add(series5);
+            this.chart1.Series.Add(series6);
+            this.chart1.Size = new System.Drawing.Size(593, 300);
+            this.chart1.TabIndex = 21;
+            this.chart1.Text = "chart1";
+            // 
+            // button18
+            // 
+            this.button18.Location = new System.Drawing.Point(12, 375);
+            this.button18.Name = "button18";
+            this.button18.Size = new System.Drawing.Size(132, 28);
+            this.button18.TabIndex = 22;
+            this.button18.Text = "Train";
+            this.button18.UseVisualStyleBackColor = true;
+            this.button18.Click += new System.EventHandler(this.TrainOnClick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.button18);
+            this.Controls.Add(this.chart1);
+            this.Controls.Add(this.buttonRecognize);
+            this.Controls.Add(this.labelProbability);
+            this.Controls.Add(this.labelOut);
             this.Controls.Add(this.button17);
             this.Controls.Add(this.button16);
             this.Controls.Add(this.actualNumber);
@@ -259,7 +342,9 @@ namespace MO_31_1_Lesnikov_nnd13092
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.actualNumber)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -283,6 +368,11 @@ namespace MO_31_1_Lesnikov_nnd13092
         private System.Windows.Forms.NumericUpDown actualNumber;
         private System.Windows.Forms.Button button16;
         private System.Windows.Forms.Button button17;
+        private System.Windows.Forms.Label labelOut;
+        private System.Windows.Forms.Label labelProbability;
+        private System.Windows.Forms.Button buttonRecognize;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
+        private System.Windows.Forms.Button button18;
     }
 }
 

@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using MO_31_1_Lesnikov_nnd13092.Neuronet;
@@ -71,5 +66,18 @@ namespace MO_31_1_Lesnikov_nnd13092
             File.AppendAllText(path, buffer);
         }
 
+        private void buttonRecognize_Click(object sender, EventArgs e)
+        {
+            network.ForwardPass(network, inputPixels);
+            labelOut.Text = "Out: " + network.Fact.ToList().IndexOf(network.Fact.Max()).ToString();
+            labelProbability.Text = "Probability: " + (100 * network.Fact.Max()).ToString("0.00") + " %";
+        }
+
+        private void TrainOnClick(object sender, EventArgs e)
+        {
+            network.Train(network);
+            MessageBox.Show("Training completed!", "Info", 
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
     }
 }
