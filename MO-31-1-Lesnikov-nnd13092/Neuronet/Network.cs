@@ -5,7 +5,7 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
 	class Network
 	{
 		/* Network layers */
-		private InputLayer inputLayer = null;
+		private InputLayer inputLayer = new InputLayer(NetworkMode.TRAIN);
 		private HiddenLayer hiddenLayer1 = new HiddenLayer(71, 15, nameof(hiddenLayer1));
 		private HiddenLayer hiddenLayer2 = new HiddenLayer(32, 71, nameof(hiddenLayer2));
 		private OutputLayer outputLayer = new OutputLayer(10, 32, nameof(outputLayer));
@@ -19,13 +19,6 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
 		public double[] ErrorEnAvg { get => errorEnAvg; set => errorEnAvg = value; }
 
 		public Network() { }
-
-		public void InitializeLayers()
-		{
-			HiddenLayer hiddenLayer1 = new HiddenLayer(71, 15, nameof(hiddenLayer1));
-			HiddenLayer hiddenLayer2 = new HiddenLayer(32, 71, nameof(hiddenLayer2));
-			OutputLayer outputLayer = new OutputLayer(10, 32, nameof(outputLayer));
-		}
 
 		/* Network forward pass */
 		public void ForwardPass(Network network, double[] networkInput)
@@ -80,7 +73,7 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
 				errorEnAvg[k] /= network.inputLayer.Trainset.GetLength(0);
 			}
 
-			network.inputLayer = null;
+			//network.inputLayer = null;
 			network.hiddenLayer1.InitializeWeights(MemoryMode.SET, nameof(hiddenLayer1) + "_memory.csv");
 			network.hiddenLayer2.InitializeWeights(MemoryMode.SET, nameof(hiddenLayer2) + "_memory.csv");
 			network.outputLayer.InitializeWeights(MemoryMode.SET, nameof(hiddenLayer2) + "_memory.csv");
