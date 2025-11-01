@@ -12,8 +12,8 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
 		string weightFile;
 		protected int size;                             // Count of neurons on this layer
 		protected int prevSize;                         // Count of neurons on previous layer
-		protected const double learningRate = 0.060;    // How fast neurons will be learning
-		protected const double momentum = 0.050d;       // Inertion moment
+		protected const double learningRate = 0.0505;    // How fast neurons will be learning
+		protected const double momentum = 0.000002d;       // Inertion moment
 		protected double[,] latestWeights;              // 2-dim. array of weights calculated on previous iteration
 		protected Neuron[] neurons;
 
@@ -76,7 +76,7 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
 			switch (memoryMode)
 			{
 				case MemoryMode.GET:
-					LayerMessage("Memory will be get");
+					//LayerMessage("Memory will be get");
 					tempStrWeights = File.ReadAllLines(path);
 					string[] memoryElement;
 					for (int i = 0; i < size; i++)
@@ -91,7 +91,7 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
 					break;
 
 				case MemoryMode.SET:
-					LayerMessage("Memory will be set");
+					//LayerMessage("Memory will be set");
 
 					tempStrWeights = new string[size];
 

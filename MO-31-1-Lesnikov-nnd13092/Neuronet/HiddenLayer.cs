@@ -24,8 +24,8 @@
         /* Backward pass */
         public override double[] BackwardPass(double[] gradientSums)
         {
-            double[] gradientSum = new double[size];
-            for (int i = 0; i < size; i++)
+            double[] gradientSum = new double[prevSize];
+            for (int i = 0; i < prevSize; i++)
             {
                 double sum = 0;
                 for (int j = 0; j < size; j++)

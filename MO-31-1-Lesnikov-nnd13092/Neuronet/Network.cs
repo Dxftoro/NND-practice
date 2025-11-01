@@ -1,11 +1,13 @@
-﻿using System.Security.Cryptography;
+﻿using System;
+using System.IO;
+using System.Security.Cryptography;
 
 namespace MO_31_1_Lesnikov_nnd13092.Neuronet
 {
 	class Network
 	{
 		/* Network layers */
-		private InputLayer inputLayer = null;
+		private InputLayer inputLayer = new InputLayer(NetworkMode.TRAIN);
 		private HiddenLayer hiddenLayer1 = new HiddenLayer(71, 15, nameof(hiddenLayer1));
 		private HiddenLayer hiddenLayer2 = new HiddenLayer(32, 71, nameof(hiddenLayer2));
 		private OutputLayer outputLayer = new OutputLayer(10, 32, nameof(outputLayer));
@@ -20,13 +22,6 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
 
 		public Network() { }
 
-		public void InitializeLayers()
-		{
-			HiddenLayer hiddenLayer1 = new HiddenLayer(71, 15, nameof(hiddenLayer1));
-			HiddenLayer hiddenLayer2 = new HiddenLayer(32, 71, nameof(hiddenLayer2));
-			OutputLayer outputLayer = new OutputLayer(10, 32, nameof(outputLayer));
-		}
-
 		/* Network forward pass */
 		public void ForwardPass(Network network, double[] networkInput)
 		{
@@ -36,7 +31,7 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
 			network.outputLayer.Recognize(network, null);
 		}
 
-		public void Train(Network network, int epoches = 10)
+		public void Train(Network network, int epoches = 150)
 		{
 			network.inputLayer = new InputLayer(NetworkMode.TRAIN);
 			double errorSum = 0.0;
@@ -80,10 +75,12 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
 				errorEnAvg[k] /= network.inputLayer.Trainset.GetLength(0);
 			}
 
-			network.inputLayer = null;
-			network.hiddenLayer1.InitializeWeights(MemoryMode.SET, nameof(hiddenLayer1) + "_memory.csv");
-			network.hiddenLayer2.InitializeWeights(MemoryMode.SET, nameof(hiddenLayer2) + "_memory.csv");
-			network.outputLayer.InitializeWeights(MemoryMode.SET, nameof(hiddenLayer2) + "_memory.csv");
+			string weightPath = AppDomain.CurrentDomain.BaseDirectory + "memory\\";
+
+			//network.inputLayer = null;
+			network.hiddenLayer1.InitializeWeights(MemoryMode.SET, weightPath + nameof(hiddenLayer1) + "_memory.csv");
+			network.hiddenLayer2.InitializeWeights(MemoryMode.SET, weightPath + nameof(hiddenLayer2) + "_memory.csv");
+			network.outputLayer.InitializeWeights(MemoryMode.SET, weightPath + nameof(hiddenLayer2) + "_memory.csv");
 		}
 	}
 }

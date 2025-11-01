@@ -23,7 +23,7 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
             string[] tempLine;
 
             switch (networkMode) {
-                case NetworkMode.TEST:
+                case NetworkMode.TRAIN:
                     tempArrayLines = File.ReadAllLines(basePath + "train.txt");
                     trainset = new double[tempArrayLines.Length, 16];
 
@@ -38,7 +38,7 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
                     ShuffleArrayRows(trainset);
                     break;
 
-                case NetworkMode.TRAIN:
+                case NetworkMode.TEST:
                     tempArrayLines = File.ReadAllLines(basePath + "test.txt");
                     testset = new double[tempArrayLines.Length, 16];
 
@@ -60,7 +60,7 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
 
         private void SwapRows(double[,] data, int indexA, int indexB)
         {
-            for (int i = 0; i < data.GetLength(0); i++)
+            for (int i = 0; i < data.GetLength(1); i++)
             {
                 double temp = data[indexA, i];
                 data[indexA, i] = data[indexB, i];
@@ -71,7 +71,7 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
         public void ShuffleArrayRows(double[,] data)
         {
             Random random = new Random();
-            for (int i = data.Length - 1; i >= 0; i--)
+            for (int i = data.GetLength(0) - 1; i >= 0; i--)
             {
                 int choosenIndex = random.Next(i + 1);
                 SwapRows(data, i, choosenIndex);

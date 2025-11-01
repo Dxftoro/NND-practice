@@ -76,8 +76,19 @@ namespace MO_31_1_Lesnikov_nnd13092
         private void TrainOnClick(object sender, EventArgs e)
         {
             network.Train(network);
+
+            for (int i = 0; i < network.ErrorEnAvg.Length; i++)
+            {
+                chartEnAvr.Series[0].Points.AddY(network.ErrorEnAvg[i]);
+            }
+
             MessageBox.Show("Training completed!", "Info", 
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void chart1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
