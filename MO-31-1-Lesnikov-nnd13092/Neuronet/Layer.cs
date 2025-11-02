@@ -13,7 +13,7 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
 		protected int size;                             // Count of neurons on this layer
 		protected int prevSize;                         // Count of neurons on previous layer
 		protected const double learningRate = 0.0505;    // How fast neurons will be learning
-		protected const double momentum = 0.000002d;       // Inertion moment
+		protected const double momentum = 0.000100d;       // Inertion moment
 		protected double[,] latestWeights;              // 2-dim. array of weights calculated on previous iteration
 		protected Neuron[] neurons;
 
@@ -104,7 +104,9 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
 					{
 						for (int j = 0; j < prevSize + 1; j++)
 						{
-							tempStrWeights[i] += weights[i, j].ToString() + ";";
+							System.Diagnostics.Debug.WriteLine(weights[i, j]);
+                            tempStrWeights[i] += weights[i, j].ToString("0.0000000", 
+								System.Globalization.CultureInfo.InvariantCulture) + ";";
 						}
 					}
 

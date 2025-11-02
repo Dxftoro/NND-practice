@@ -25,13 +25,19 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
 		/* Network forward pass */
 		public void ForwardPass(Network network, double[] networkInput)
 		{
+			for (int i = 0; i < networkInput.Length; i++)
+			{
+				if (networkInput[i] == 1.0) networkInput[i] = 0.75;
+				else if (networkInput[i] == 0.0) networkInput[i] = -0.75;
+			}
+
 			network.hiddenLayer1.Data = networkInput;
 			network.hiddenLayer1.Recognize(null, network.hiddenLayer2);
 			network.hiddenLayer2.Recognize(null, network.outputLayer);
 			network.outputLayer.Recognize(network, null);
 		}
 
-		public void Train(Network network, int epoches = 150)
+		public void Train(Network network, int epoches = 38)
 		{
 			network.inputLayer = new InputLayer(NetworkMode.TRAIN);
 			double errorSum = 0.0;
@@ -78,9 +84,9 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
 			string weightPath = AppDomain.CurrentDomain.BaseDirectory + "memory\\";
 
 			//network.inputLayer = null;
-			network.hiddenLayer1.InitializeWeights(MemoryMode.SET, weightPath + nameof(hiddenLayer1) + "_memory.csv");
-			network.hiddenLayer2.InitializeWeights(MemoryMode.SET, weightPath + nameof(hiddenLayer2) + "_memory.csv");
-			network.outputLayer.InitializeWeights(MemoryMode.SET, weightPath + nameof(hiddenLayer2) + "_memory.csv");
+			network.hiddenLayer1.InitializeWeights(MemoryMode.SET, nameof(hiddenLayer1) + "_memory.csv");
+			network.hiddenLayer2.InitializeWeights(MemoryMode.SET, nameof(hiddenLayer2) + "_memory.csv");
+			network.outputLayer.InitializeWeights(MemoryMode.SET, nameof(outputLayer) + "_memory.csv");
 		}
 	}
 }
