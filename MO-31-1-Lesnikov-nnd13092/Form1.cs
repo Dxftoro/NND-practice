@@ -86,7 +86,27 @@ namespace MO_31_1_Lesnikov_nnd13092
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
+        private void TestOnClick(object sender, EventArgs e)
+        {
+            double averageErrorEn = network.Test(network);
+
+            for (int i = 0; i < network.ErrorEnAvg.Length; i++)
+            {
+                chartEnAvr.Series[0].Points.AddY(network.ErrorEnAvg[i]);
+            }
+
+            string stringValue = averageErrorEn.ToString("0.0000");
+            testAee.Text = "Test AEE: " + stringValue;
+            MessageBox.Show("Testing completed with AEE = " + stringValue, "Info",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
         private void chart1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
         {
 
         }

@@ -29,9 +29,9 @@ namespace MO_31_1_Lesnikov_nnd13092
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Title title1 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title2 = new System.Windows.Forms.DataVisualization.Charting.Title();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
@@ -55,6 +55,8 @@ namespace MO_31_1_Lesnikov_nnd13092
             this.buttonRecognize = new System.Windows.Forms.Button();
             this.chartEnAvr = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.button18 = new System.Windows.Forms.Button();
+            this.button19 = new System.Windows.Forms.Button();
+            this.testAee = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.actualNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartEnAvr)).BeginInit();
             this.SuspendLayout();
@@ -223,7 +225,7 @@ namespace MO_31_1_Lesnikov_nnd13092
             // 
             // button16
             // 
-            this.button16.Location = new System.Drawing.Point(166, 149);
+            this.button16.Location = new System.Drawing.Point(166, 195);
             this.button16.Name = "button16";
             this.button16.Size = new System.Drawing.Size(83, 41);
             this.button16.TabIndex = 16;
@@ -233,7 +235,7 @@ namespace MO_31_1_Lesnikov_nnd13092
             // 
             // button17
             // 
-            this.button17.Location = new System.Drawing.Point(166, 196);
+            this.button17.Location = new System.Drawing.Point(166, 241);
             this.button17.Name = "button17";
             this.button17.Size = new System.Drawing.Size(83, 41);
             this.button17.TabIndex = 17;
@@ -273,21 +275,21 @@ namespace MO_31_1_Lesnikov_nnd13092
             // 
             // chartEnAvr
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chartEnAvr.ChartAreas.Add(chartArea1);
+            chartArea2.Name = "ChartArea1";
+            this.chartEnAvr.ChartAreas.Add(chartArea2);
             this.chartEnAvr.Location = new System.Drawing.Point(273, 57);
             this.chartEnAvr.Name = "chartEnAvr";
-            series1.BorderWidth = 3;
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series1.Name = "Series1";
-            this.chartEnAvr.Series.Add(series1);
+            series2.BorderWidth = 3;
+            series2.ChartArea = "ChartArea1";
+            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series2.Name = "Series1";
+            this.chartEnAvr.Series.Add(series2);
             this.chartEnAvr.Size = new System.Drawing.Size(593, 300);
             this.chartEnAvr.TabIndex = 21;
             this.chartEnAvr.Text = "chart1";
-            title1.Name = "Title1";
-            title1.Text = "Average error energy";
-            this.chartEnAvr.Titles.Add(title1);
+            title2.Name = "Title1";
+            title2.Text = "Average error energy";
+            this.chartEnAvr.Titles.Add(title2);
             this.chartEnAvr.Click += new System.EventHandler(this.chart1_Click);
             // 
             // button18
@@ -300,11 +302,34 @@ namespace MO_31_1_Lesnikov_nnd13092
             this.button18.UseVisualStyleBackColor = true;
             this.button18.Click += new System.EventHandler(this.TrainOnClick);
             // 
+            // button19
+            // 
+            this.button19.Location = new System.Drawing.Point(166, 149);
+            this.button19.Name = "button19";
+            this.button19.Size = new System.Drawing.Size(83, 40);
+            this.button19.TabIndex = 23;
+            this.button19.Text = "Test";
+            this.button19.UseVisualStyleBackColor = true;
+            this.button19.Click += new System.EventHandler(this.TestOnClick);
+            // 
+            // testAee
+            // 
+            this.testAee.AutoSize = true;
+            this.testAee.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.testAee.Location = new System.Drawing.Point(474, 12);
+            this.testAee.Name = "testAee";
+            this.testAee.Size = new System.Drawing.Size(173, 33);
+            this.testAee.TabIndex = 24;
+            this.testAee.Text = "Test AEE: --";
+            this.testAee.Click += new System.EventHandler(this.label1_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(905, 380);
+            this.Controls.Add(this.testAee);
+            this.Controls.Add(this.button19);
             this.Controls.Add(this.button18);
             this.Controls.Add(this.chartEnAvr);
             this.Controls.Add(this.buttonRecognize);
@@ -363,6 +388,8 @@ namespace MO_31_1_Lesnikov_nnd13092
         private System.Windows.Forms.Button buttonRecognize;
         private System.Windows.Forms.DataVisualization.Charting.Chart chartEnAvr;
         private System.Windows.Forms.Button button18;
+        private System.Windows.Forms.Button button19;
+        private System.Windows.Forms.Label testAee;
     }
 }
 

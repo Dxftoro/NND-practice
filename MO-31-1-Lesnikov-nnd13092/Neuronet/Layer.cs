@@ -13,7 +13,7 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
 		protected int size;                             // Count of neurons on this layer
 		protected int prevSize;                         // Count of neurons on previous layer
 		protected const double learningRate = 0.070;		// How fast neurons will be learning
-		protected const double momentum = 0.060000d;    // Inertion moment
+		protected const double momentum = 0.000d;    // Inertion moment
 		protected double[,] latestWeights;              // 2-dim. array of weights calculated on previous iteration
 		protected Neuron[] neurons;
 

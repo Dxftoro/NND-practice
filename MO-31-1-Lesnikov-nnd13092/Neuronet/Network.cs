@@ -27,8 +27,8 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
 		{
 			for (int i = 0; i < networkInput.Length; i++)
 			{
-				if (networkInput[i] == 1.0) networkInput[i] = 1.0;
-				else if (networkInput[i] == 0.0) networkInput[i] = -1.0;
+				if (networkInput[i] == 1.0) networkInput[i] = 0.9;
+				else if (networkInput[i] == 0.0) networkInput[i] = -0.9;
 			}
 
 			network.hiddenLayer1.Data = networkInput;
@@ -37,10 +37,10 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
 			network.outputLayer.Recognize(network, null);
 		}
 
-		public void Train(Network network, int epoches = 17)
+		public void Train(Network network, int epoches = 20)
 		{
 			network.inputLayer = new InputLayer(NetworkMode.TRAIN);
-			double errorSum = 0.0;
+			double errorSum;
 			double[] errors;
 			double[] layerGrad1;
 			double[] layerGrad2;
@@ -87,6 +87,48 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
 			network.hiddenLayer1.InitializeWeights(MemoryMode.SET, nameof(hiddenLayer1) + "_memory.csv");
 			network.hiddenLayer2.InitializeWeights(MemoryMode.SET, nameof(hiddenLayer2) + "_memory.csv");
 			network.outputLayer.InitializeWeights(MemoryMode.SET, nameof(outputLayer) + "_memory.csv");
+		}
+
+		public double Test(Network network, int epoches = 10)
+        {
+			network.inputLayer = new InputLayer(NetworkMode.TEST);
+			double errorSum;
+			double[] errors;
+			errorEnAvg = new double[epoches];
+
+			for (int k = 0; k < epoches; k++)
+            {
+				errorEnAvg[k] = 0.0;
+				network.inputLayer.ShuffleArrayRows(network.inputLayer.Testset);
+
+				for (int i = 0; i < network.inputLayer.Testset.GetLength(0); i++)
+                {
+					double[] tempTest = new double[15];
+					for (int j = 0; j < tempTest.Length; j++)
+					{
+						tempTest[j] = network.inputLayer.Testset[i, j + 1];
+					}
+
+					ForwardPass(network, tempTest);
+
+					errorSum = 0.0;
+					errors = new double[network.Fact.Length];
+					for (int x = 0; x < errors.Length; x++)
+					{
+						if (x == network.inputLayer.Testset[i, 0])
+							errors[x] = 1.0 - network.Fact[x];
+						else errors[x] = -network.Fact[x];
+						errorSum += errors[x] * errors[x] / 2;
+					}
+					errorEnAvg[k] += errorSum / errors.Length;
+				}
+
+				errorEnAvg[k] /= network.inputLayer.Testset.GetLength(0);
+			}
+
+			double resultErrorEn = 0.0;
+			for (int i = 0; i < errorEnAvg.Length; i++) resultErrorEn += errorEnAvg[i];
+			return resultErrorEn / errorEnAvg.Length;
 		}
 	}
 }
