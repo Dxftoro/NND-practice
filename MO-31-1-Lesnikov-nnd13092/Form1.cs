@@ -80,6 +80,7 @@ namespace MO_31_1_Lesnikov_nnd13092
             for (int i = 0; i < network.ErrorEnAvg.Length; i++)
             {
                 chartEnAvr.Series[0].Points.AddY(network.ErrorEnAvg[i]);
+                chartEnAvr.Series[1].Points.AddY(network.EpochPrecisions[i]);
             }
 
             MessageBox.Show("Training completed!", "Info", 
@@ -93,6 +94,7 @@ namespace MO_31_1_Lesnikov_nnd13092
             for (int i = 0; i < network.ErrorEnAvg.Length; i++)
             {
                 chartEnAvr.Series[0].Points.AddY(network.ErrorEnAvg[i]);
+                chartEnAvr.Series[1].Points.AddY(network.EpochPrecisions[i]);
             }
 
             string stringValue = averageErrorEn.ToString("0.0000");

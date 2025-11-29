@@ -29,9 +29,10 @@ namespace MO_31_1_Lesnikov_nnd13092
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Title title2 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.Title title1 = new System.Windows.Forms.DataVisualization.Charting.Title();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
@@ -275,21 +276,25 @@ namespace MO_31_1_Lesnikov_nnd13092
             // 
             // chartEnAvr
             // 
-            chartArea2.Name = "ChartArea1";
-            this.chartEnAvr.ChartAreas.Add(chartArea2);
+            chartArea1.Name = "ChartArea1";
+            this.chartEnAvr.ChartAreas.Add(chartArea1);
             this.chartEnAvr.Location = new System.Drawing.Point(273, 57);
             this.chartEnAvr.Name = "chartEnAvr";
-            series2.BorderWidth = 3;
+            series1.BorderWidth = 3;
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series1.Name = "Series1";
             series2.ChartArea = "ChartArea1";
             series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series2.Name = "Series1";
+            series2.Name = "Series2";
+            this.chartEnAvr.Series.Add(series1);
             this.chartEnAvr.Series.Add(series2);
             this.chartEnAvr.Size = new System.Drawing.Size(593, 300);
             this.chartEnAvr.TabIndex = 21;
             this.chartEnAvr.Text = "chart1";
-            title2.Name = "Title1";
-            title2.Text = "Average error energy";
-            this.chartEnAvr.Titles.Add(title2);
+            title1.Name = "Title1";
+            title1.Text = "Average error energy";
+            this.chartEnAvr.Titles.Add(title1);
             this.chartEnAvr.Click += new System.EventHandler(this.chart1_Click);
             // 
             // button18

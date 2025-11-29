@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing.Text;
 using System.IO;
+using System.Diagnostics;
 
 namespace MO_31_1_Lesnikov_nnd13092.Neuronet
 {
@@ -45,6 +46,7 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
                     for (int i = 0; i < tempArrayLines.Length; i++)
                     {
                         tempLine = tempArrayLines[i].Split(' ');
+                        //Debug.WriteLine(tempLine[0]);
                         for (int j = 0; j < 16; j++)
                         {
                             testset[i, j] = double.Parse(tempLine[j]);

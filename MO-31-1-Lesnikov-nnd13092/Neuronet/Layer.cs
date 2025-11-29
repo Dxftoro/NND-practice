@@ -12,8 +12,8 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
 		string weightFile;
 		protected int size;                             // Count of neurons on this layer
 		protected int prevSize;                         // Count of neurons on previous layer
-		protected const double learningRate = 0.070;		// How fast neurons will be learning
-		protected const double momentum = 0.000d;    // Inertion moment
+		protected const double learningRate = 0.01;		// How fast neurons will be learning
+		protected const double momentum = 0.820d;		// Inertion moment
 		protected double[,] latestWeights;              // 2-dim. array of weights calculated on previous iteration
 		protected Neuron[] neurons;
 
@@ -113,63 +113,34 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
 					File.WriteAllLines(path, tempStrWeights);
 					break;
 
-				case MemoryMode.INIT:
-					LayerMessage("Memory will be init");
+                case MemoryMode.INIT:
+                    LayerMessage("Memory will be init");
+                    tempStrWeights = new string[size];
+                    Random random = new Random();
 
-					tempStrWeights = new string[size];
-					Random random = new Random();
+                    // Xavier uniform с ограниченным диапазоном
+                    double xavier_scale = Math.Sqrt(6.0 / (prevSize + size + 1));
 
-					double avgSum = 0.0;
-					double avgSquaredSum = 0.0;
-					double scale = Math.Sqrt(2.0 / (prevSize + size));
+                    // Сужаем масштаб до желаемого диапазона
+                    double desired_scale = 0.5;
+                    double scale_factor = desired_scale / xavier_scale;
 
-					string debugFilename = layerName + "_debug.txt";
-					File.WriteAllText(debugFilename, "AW\tASW\n");
+                    for (int i = 0; i < size; i++)
+                    {
+                        for (int j = 0; j < prevSize + 1; j++)
+                        {
+                            // Равномерное распределение с ограничением
+                            double weight = (random.NextDouble() * 2.0 - 1.0) * scale_factor;
+                            weight = Math.Max(-0.5, Math.Min(0.5, weight));
 
-					for (int i = 0; i < size; i++)
-					{
-						double weightSum = 0.0;
-						double weightSquaredSum = 0.0;
+                            weights[i, j] = weight;
+                            tempStrWeights[i] += weights[i, j].ToString("F6", System.Globalization.CultureInfo.InvariantCulture) + ";";
+                        }
+                    }
 
-						/* Picking random weights from [-1; +1] */
-						for (int j = 0; j < prevSize + 1; j++)
-						{
-							double u1 = 1.0 - random.NextDouble();
-							double u2 = 1.0 - random.NextDouble();
-							double randStrNormal = Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Sin(2.0 * Math.PI * u2);
-
-							weights[i, j] = randStrNormal * scale;
-							weightSum += weights[i, j];
-							weightSquaredSum += weights[i, j] * weights[i, j];
-						}
-
-						/* Calculating average weight and base offset */
-						double averageWeight = weightSum / (prevSize + 1);
-						double averageSquaredWeight = weightSquaredSum / (prevSize + 1);
-						double variance = averageSquaredWeight - (averageWeight * averageWeight);
-						double baseOffset = Math.Sqrt(Math.Max(variance, 1e-8));
-
-                        File.AppendAllText(debugFilename, averageWeight.ToString() + 
-							"\t" + averageSquaredWeight.ToString() + "\n");
-
-						avgSum += averageWeight;
-						avgSquaredSum += baseOffset;
-
-						/* Standartizing weights and writing them to file */
-						for (int j = 0; j < prevSize + 1; j++)
-						{
-							tempStrWeights[i] += weights[i, j].ToString().Replace(',', '.') + ";";
-						}
-					}
-
-					avgSum /= size;
-					avgSquaredSum /= size;
-					File.AppendAllText(debugFilename, "\n\n");
-					File.AppendAllText(debugFilename, avgSum.ToString() + "\t" + avgSquaredSum.ToString());
-
-					File.WriteAllLines(path, tempStrWeights);
-					break;
-			}
+                    File.WriteAllLines(path, tempStrWeights);
+                    break;
+            }
 
 			return weights;
 		}

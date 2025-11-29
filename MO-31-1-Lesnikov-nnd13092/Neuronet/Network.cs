@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 
 namespace MO_31_1_Lesnikov_nnd13092.Neuronet
@@ -17,8 +18,12 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
 		/* Average error energy on each epoch */
 		private double[] errorEnAvg;
 
+		/* Array wich contains percentage of right answers on each test epoch */
+		private	double[] epochPrecisions;
+
 		public double[] Fact { get => fact; }
 		public double[] ErrorEnAvg { get => errorEnAvg; set => errorEnAvg = value; }
+		public double[] EpochPrecisions { get => epochPrecisions; set => epochPrecisions = value; }
 
 		public Network() { }
 
@@ -27,8 +32,8 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
 		{
 			for (int i = 0; i < networkInput.Length; i++)
 			{
-				if (networkInput[i] == 1.0) networkInput[i] = 0.9;
-				else if (networkInput[i] == 0.0) networkInput[i] = -0.9;
+				if (networkInput[i] == 1.0) networkInput[i] = 0.8;
+				else if (networkInput[i] == 0.0) networkInput[i] = -0.8;
 			}
 
 			network.hiddenLayer1.Data = networkInput;
@@ -37,7 +42,7 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
 			network.outputLayer.Recognize(network, null);
 		}
 
-		public void Train(Network network, int epoches = 20)
+		public void Train(Network network, int epoches = 15)
 		{
 			network.inputLayer = new InputLayer(NetworkMode.TRAIN);
 			double errorSum;
@@ -46,8 +51,9 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
 			double[] layerGrad2;
 
 			errorEnAvg = new double[epoches];
+            epochPrecisions = new double[epoches];
 
-			for (int k = 0; k < epoches; k++)
+            for (int k = 0; k < epoches; k++)
 			{
 				errorEnAvg[k] = 0.0;
 				network.inputLayer.ShuffleArrayRows(network.inputLayer.Trainset);
@@ -73,15 +79,19 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
 					}
 					errorEnAvg[k] += errorSum / errors.Length;
 
-					layerGrad2 = network.outputLayer.BackwardPass(errors);
+                    int maxFactIndex = network.Fact.ToList().IndexOf(network.Fact.Max());
+                    if (maxFactIndex == network.inputLayer.Trainset[i, 0]) epochPrecisions[k]++;
+
+                    layerGrad2 = network.outputLayer.BackwardPass(errors);
 					layerGrad1 = network.hiddenLayer2.BackwardPass(layerGrad2);
 					network.hiddenLayer1.BackwardPass(layerGrad1);
 				}
 
 				errorEnAvg[k] /= network.inputLayer.Trainset.GetLength(0);
-			}
+                epochPrecisions[k] /= network.inputLayer.Trainset.GetLength(0);
+            }
 
-			string weightPath = AppDomain.CurrentDomain.BaseDirectory + "memory\\";
+            string weightPath = AppDomain.CurrentDomain.BaseDirectory + "memory\\";
 
 			//network.inputLayer = null;
 			network.hiddenLayer1.InitializeWeights(MemoryMode.SET, nameof(hiddenLayer1) + "_memory.csv");
@@ -95,6 +105,7 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
 			double errorSum;
 			double[] errors;
 			errorEnAvg = new double[epoches];
+			epochPrecisions = new double[epoches];
 
 			for (int k = 0; k < epoches; k++)
             {
@@ -121,9 +132,13 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
 						errorSum += errors[x] * errors[x] / 2;
 					}
 					errorEnAvg[k] += errorSum / errors.Length;
+
+					int maxFactIndex = network.Fact.ToList().IndexOf(network.Fact.Max());
+					if (maxFactIndex == network.inputLayer.Testset[i, 0]) epochPrecisions[k]++;
 				}
 
 				errorEnAvg[k] /= network.inputLayer.Testset.GetLength(0);
+				epochPrecisions[k] /= network.inputLayer.Testset.GetLength(0);
 			}
 
 			double resultErrorEn = 0.0;
