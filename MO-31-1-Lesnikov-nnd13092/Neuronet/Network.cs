@@ -42,7 +42,7 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
 			network.outputLayer.Recognize(network, null);
 		}
 
-		public void Train(Network network, int epoches = 15)
+		public void Train(Network network, int epoches = 10)
 		{
 			network.inputLayer = new InputLayer(NetworkMode.TRAIN);
 			double errorSum;

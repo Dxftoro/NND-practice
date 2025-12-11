@@ -25,13 +25,13 @@
         /* Backward pass */
         public override double[] BackwardPass(double[] errors)
         {
-            double[] grSum = new double[prevSize + 1];
-            for (int i = 0; i < prevSize + 1; i++)
+            double[] grSum = new double[prevSize];
+            for (int i = 0; i < prevSize; i++)
             {
                 double sum = 0;
                 for (int j = 0; j < size; j++)
                 {
-                    sum += neurons[j].Weights[j] * errors[j];
+                    sum += neurons[j].Weights[i + 1] * errors[j];
                 }
                 grSum[i] = sum;
             }
@@ -41,8 +41,16 @@
                 for (int n = 0; n < prevSize + 1; n++)
                 {
                     double delta;
-                    if (n == 0) delta = momentum * latestWeights[i, 0] + learningRate * errors[i];
-                    else delta = momentum * latestWeights[i, n] + learningRate * neurons[i].Inputs[n - 1] * errors[i];
+                    if (n == 0)
+                    {
+                        delta = momentum * latestWeights[i, 0] + learningRate * errors[i];
+                    }
+                    else
+                    {
+                        double gradient = neurons[i].Inputs[n - 1] * errors[i];
+                        double regularization = lambda * neurons[i].Weights[n];
+                        delta = momentum * latestWeights[i, n] + learningRate * (gradient + regularization);
+                    }
 
                     latestWeights[i, n] = delta;
                     neurons[i].Weights[n] += delta;

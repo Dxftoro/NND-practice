@@ -12,8 +12,11 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
 		string weightFile;
 		protected int size;                             // Count of neurons on this layer
 		protected int prevSize;                         // Count of neurons on previous layer
-		protected const double learningRate = 0.01;		// How fast neurons will be learning
-		protected const double momentum = 0.820d;		// Inertion moment
+		
+		protected const double learningRate = 0.08;		// How fast neurons will be learning
+		protected const double momentum = 0.090d;       // Inertion moment
+		protected const double lambda = 0.001;			// Regularisation power
+
 		protected double[,] latestWeights;              // 2-dim. array of weights calculated on previous iteration
 		protected Neuron[] neurons;
 
@@ -118,10 +121,8 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
                     tempStrWeights = new string[size];
                     Random random = new Random();
 
-                    // Xavier uniform с ограниченным диапазоном
                     double xavier_scale = Math.Sqrt(6.0 / (prevSize + size + 1));
 
-                    // Сужаем масштаб до желаемого диапазона
                     double desired_scale = 0.5;
                     double scale_factor = desired_scale / xavier_scale;
 
@@ -129,9 +130,8 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
                     {
                         for (int j = 0; j < prevSize + 1; j++)
                         {
-                            // Равномерное распределение с ограничением
                             double weight = (random.NextDouble() * 2.0 - 1.0) * scale_factor;
-                            weight = Math.Max(-0.5, Math.Min(0.5, weight));
+                            //weight = Math.Max(-0.5, Math.Min(0.5, weight));
 
                             weights[i, j] = weight;
                             tempStrWeights[i] += weights[i, j].ToString("F6", System.Globalization.CultureInfo.InvariantCulture) + ";";

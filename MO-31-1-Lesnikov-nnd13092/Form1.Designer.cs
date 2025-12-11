@@ -31,8 +31,10 @@ namespace MO_31_1_Lesnikov_nnd13092
         {
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.Title title1 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title2 = new System.Windows.Forms.DataVisualization.Charting.Title();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
@@ -58,8 +60,10 @@ namespace MO_31_1_Lesnikov_nnd13092
             this.button18 = new System.Windows.Forms.Button();
             this.button19 = new System.Windows.Forms.Button();
             this.testAee = new System.Windows.Forms.Label();
+            this.chartTestAee = new System.Windows.Forms.DataVisualization.Charting.Chart();
             ((System.ComponentModel.ISupportInitialize)(this.actualNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartEnAvr)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartTestAee)).BeginInit();
             this.SuspendLayout();
             // 
             // button1
@@ -284,12 +288,8 @@ namespace MO_31_1_Lesnikov_nnd13092
             series1.ChartArea = "ChartArea1";
             series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             series1.Name = "Series1";
-            series2.ChartArea = "ChartArea1";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series2.Name = "Series2";
             this.chartEnAvr.Series.Add(series1);
-            this.chartEnAvr.Series.Add(series2);
-            this.chartEnAvr.Size = new System.Drawing.Size(593, 300);
+            this.chartEnAvr.Size = new System.Drawing.Size(593, 209);
             this.chartEnAvr.TabIndex = 21;
             this.chartEnAvr.Text = "chart1";
             title1.Name = "Title1";
@@ -328,11 +328,30 @@ namespace MO_31_1_Lesnikov_nnd13092
             this.testAee.Text = "Test AEE: --";
             this.testAee.Click += new System.EventHandler(this.label1_Click);
             // 
+            // chartTestAee
+            // 
+            chartArea2.Name = "ChartArea1";
+            this.chartTestAee.ChartAreas.Add(chartArea2);
+            this.chartTestAee.Location = new System.Drawing.Point(273, 272);
+            this.chartTestAee.Name = "chartTestAee";
+            series2.BorderWidth = 3;
+            series2.ChartArea = "ChartArea1";
+            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series2.Name = "Series1";
+            this.chartTestAee.Series.Add(series2);
+            this.chartTestAee.Size = new System.Drawing.Size(593, 209);
+            this.chartTestAee.TabIndex = 25;
+            this.chartTestAee.Text = "chart1";
+            title2.Name = "Title1";
+            title2.Text = "Test AEE";
+            this.chartTestAee.Titles.Add(title2);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(905, 380);
+            this.ClientSize = new System.Drawing.Size(905, 495);
+            this.Controls.Add(this.chartTestAee);
             this.Controls.Add(this.testAee);
             this.Controls.Add(this.button19);
             this.Controls.Add(this.button18);
@@ -363,6 +382,7 @@ namespace MO_31_1_Lesnikov_nnd13092
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.actualNumber)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartEnAvr)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartTestAee)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -395,6 +415,7 @@ namespace MO_31_1_Lesnikov_nnd13092
         private System.Windows.Forms.Button button18;
         private System.Windows.Forms.Button button19;
         private System.Windows.Forms.Label testAee;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chartTestAee;
     }
 }
 
