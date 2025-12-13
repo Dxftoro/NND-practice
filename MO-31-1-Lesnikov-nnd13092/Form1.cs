@@ -112,5 +112,15 @@ namespace MO_31_1_Lesnikov_nnd13092
         {
 
         }
+
+        private void checkBoxRegularization_CheckedChanged(object sender, EventArgs e)
+        {
+            network.RegularisationEnabled = checkBoxRegularization.Checked;
+        }
+
+        private void checkBoxDropout_CheckedChanged(object sender, EventArgs e)
+        {
+            network.DropOutEnabled = checkBoxDropout.Checked;
+        }
     }
 }

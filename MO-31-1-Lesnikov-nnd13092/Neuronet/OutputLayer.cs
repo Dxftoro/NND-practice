@@ -23,9 +23,11 @@
         }
 
         /* Backward pass */
-        public override double[] BackwardPass(double[] errors)
+        public override double[] BackwardPass(double[] errors, bool doRegularization)
         {
             double[] grSum = new double[prevSize];
+            double regToggler = doRegularization ? 1.0 : 0.0;
+
             for (int i = 0; i < prevSize; i++)
             {
                 double sum = 0;
@@ -48,7 +50,7 @@
                     else
                     {
                         double gradient = neurons[i].Inputs[n - 1] * errors[i];
-                        double regularization = lambda * neurons[i].Weights[n];
+                        double regularization = regToggler * lambda * neurons[i].Weights[n];
                         delta = momentum * latestWeights[i, n] + learningRate * (gradient + regularization);
                     }
 

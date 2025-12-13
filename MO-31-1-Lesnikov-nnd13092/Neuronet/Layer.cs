@@ -15,7 +15,7 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
 		
 		protected const double learningRate = 0.08;		// How fast neurons will be learning
 		protected const double momentum = 0.090d;       // Inertion moment
-		protected const double lambda = 0.001;			// Regularisation power
+		protected const double lambda = 0.01;          // Regularisation power
 
 		protected double[,] latestWeights;              // 2-dim. array of weights calculated on previous iteration
 		protected Neuron[] neurons;
@@ -107,7 +107,7 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
 					{
 						for (int j = 0; j < prevSize + 1; j++)
 						{
-							System.Diagnostics.Debug.WriteLine(weights[i, j]);
+							//System.Diagnostics.Debug.WriteLine(weights[i, j]);
                             tempStrWeights[i] += weights[i, j].ToString("0.0000000", 
 								System.Globalization.CultureInfo.InvariantCulture) + ";";
 						}
@@ -123,7 +123,7 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
 
                     double xavier_scale = Math.Sqrt(6.0 / (prevSize + size + 1));
 
-                    double desired_scale = 0.5;
+                    double desired_scale = 0.1;
                     double scale_factor = desired_scale / xavier_scale;
 
                     for (int i = 0; i < size; i++)
@@ -131,7 +131,6 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
                         for (int j = 0; j < prevSize + 1; j++)
                         {
                             double weight = (random.NextDouble() * 2.0 - 1.0) * scale_factor;
-                            //weight = Math.Max(-0.5, Math.Min(0.5, weight));
 
                             weights[i, j] = weight;
                             tempStrWeights[i] += weights[i, j].ToString("F6", System.Globalization.CultureInfo.InvariantCulture) + ";";
@@ -151,6 +150,6 @@ namespace MO_31_1_Lesnikov_nnd13092.Neuronet
 		}
 
 		abstract public void Recognize(Network network, Layer nextLayer);
-		abstract public double[] BackwardPass(double[] stuff);
+		abstract public double[] BackwardPass(double[] stuff, bool doRegularization);
 	}
 }

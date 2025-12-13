@@ -29,12 +29,12 @@ namespace MO_31_1_Lesnikov_nnd13092
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Title title1 = new System.Windows.Forms.DataVisualization.Charting.Title();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Title title2 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title3 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title4 = new System.Windows.Forms.DataVisualization.Charting.Title();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
@@ -61,9 +61,13 @@ namespace MO_31_1_Lesnikov_nnd13092
             this.button19 = new System.Windows.Forms.Button();
             this.testAee = new System.Windows.Forms.Label();
             this.chartTestAee = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.settingsGroup = new System.Windows.Forms.GroupBox();
+            this.checkBoxRegularization = new System.Windows.Forms.CheckBox();
+            this.checkBoxDropout = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.actualNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartEnAvr)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartTestAee)).BeginInit();
+            this.settingsGroup.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
@@ -218,7 +222,7 @@ namespace MO_31_1_Lesnikov_nnd13092
             // 
             // actualNumber
             // 
-            this.actualNumber.Location = new System.Drawing.Point(12, 302);
+            this.actualNumber.Location = new System.Drawing.Point(12, 287);
             this.actualNumber.Maximum = new decimal(new int[] {
             9,
             0,
@@ -280,21 +284,21 @@ namespace MO_31_1_Lesnikov_nnd13092
             // 
             // chartEnAvr
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chartEnAvr.ChartAreas.Add(chartArea1);
+            chartArea3.Name = "ChartArea1";
+            this.chartEnAvr.ChartAreas.Add(chartArea3);
             this.chartEnAvr.Location = new System.Drawing.Point(273, 57);
             this.chartEnAvr.Name = "chartEnAvr";
-            series1.BorderWidth = 3;
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series1.Name = "Series1";
-            this.chartEnAvr.Series.Add(series1);
+            series3.BorderWidth = 3;
+            series3.ChartArea = "ChartArea1";
+            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series3.Name = "Series1";
+            this.chartEnAvr.Series.Add(series3);
             this.chartEnAvr.Size = new System.Drawing.Size(593, 209);
             this.chartEnAvr.TabIndex = 21;
             this.chartEnAvr.Text = "chart1";
-            title1.Name = "Title1";
-            title1.Text = "Average error energy";
-            this.chartEnAvr.Titles.Add(title1);
+            title3.Name = "Title1";
+            title3.Text = "Average error energy";
+            this.chartEnAvr.Titles.Add(title3);
             this.chartEnAvr.Click += new System.EventHandler(this.chart1_Click);
             // 
             // button18
@@ -330,27 +334,61 @@ namespace MO_31_1_Lesnikov_nnd13092
             // 
             // chartTestAee
             // 
-            chartArea2.Name = "ChartArea1";
-            this.chartTestAee.ChartAreas.Add(chartArea2);
+            chartArea4.Name = "ChartArea1";
+            this.chartTestAee.ChartAreas.Add(chartArea4);
             this.chartTestAee.Location = new System.Drawing.Point(273, 272);
             this.chartTestAee.Name = "chartTestAee";
-            series2.BorderWidth = 3;
-            series2.ChartArea = "ChartArea1";
-            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series2.Name = "Series1";
-            this.chartTestAee.Series.Add(series2);
+            series4.BorderWidth = 3;
+            series4.ChartArea = "ChartArea1";
+            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series4.Name = "Series1";
+            this.chartTestAee.Series.Add(series4);
             this.chartTestAee.Size = new System.Drawing.Size(593, 209);
             this.chartTestAee.TabIndex = 25;
             this.chartTestAee.Text = "chart1";
-            title2.Name = "Title1";
-            title2.Text = "Test AEE";
-            this.chartTestAee.Titles.Add(title2);
+            title4.Name = "Title1";
+            title4.Text = "Test AEE";
+            this.chartTestAee.Titles.Add(title4);
+            // 
+            // settingsGroup
+            // 
+            this.settingsGroup.Controls.Add(this.checkBoxDropout);
+            this.settingsGroup.Controls.Add(this.checkBoxRegularization);
+            this.settingsGroup.Location = new System.Drawing.Point(12, 313);
+            this.settingsGroup.Name = "settingsGroup";
+            this.settingsGroup.Size = new System.Drawing.Size(237, 168);
+            this.settingsGroup.TabIndex = 26;
+            this.settingsGroup.TabStop = false;
+            this.settingsGroup.Text = "Settings";
+            // 
+            // checkBoxRegularization
+            // 
+            this.checkBoxRegularization.AutoSize = true;
+            this.checkBoxRegularization.Location = new System.Drawing.Point(6, 19);
+            this.checkBoxRegularization.Name = "checkBoxRegularization";
+            this.checkBoxRegularization.Size = new System.Drawing.Size(124, 17);
+            this.checkBoxRegularization.TabIndex = 0;
+            this.checkBoxRegularization.Text = "Enable regularization";
+            this.checkBoxRegularization.UseVisualStyleBackColor = true;
+            this.checkBoxRegularization.CheckedChanged += new System.EventHandler(this.checkBoxRegularization_CheckedChanged);
+            // 
+            // checkBoxDropout
+            // 
+            this.checkBoxDropout.AutoSize = true;
+            this.checkBoxDropout.Location = new System.Drawing.Point(6, 42);
+            this.checkBoxDropout.Name = "checkBoxDropout";
+            this.checkBoxDropout.Size = new System.Drawing.Size(98, 17);
+            this.checkBoxDropout.TabIndex = 1;
+            this.checkBoxDropout.Text = "Enable dropout";
+            this.checkBoxDropout.UseVisualStyleBackColor = true;
+            this.checkBoxDropout.CheckedChanged += new System.EventHandler(this.checkBoxDropout_CheckedChanged);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(905, 495);
+            this.Controls.Add(this.settingsGroup);
             this.Controls.Add(this.chartTestAee);
             this.Controls.Add(this.testAee);
             this.Controls.Add(this.button19);
@@ -383,6 +421,8 @@ namespace MO_31_1_Lesnikov_nnd13092
             ((System.ComponentModel.ISupportInitialize)(this.actualNumber)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartEnAvr)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chartTestAee)).EndInit();
+            this.settingsGroup.ResumeLayout(false);
+            this.settingsGroup.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -416,6 +456,9 @@ namespace MO_31_1_Lesnikov_nnd13092
         private System.Windows.Forms.Button button19;
         private System.Windows.Forms.Label testAee;
         private System.Windows.Forms.DataVisualization.Charting.Chart chartTestAee;
+        private System.Windows.Forms.GroupBox settingsGroup;
+        private System.Windows.Forms.CheckBox checkBoxRegularization;
+        private System.Windows.Forms.CheckBox checkBoxDropout;
     }
 }
 
